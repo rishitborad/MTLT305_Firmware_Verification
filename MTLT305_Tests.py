@@ -455,7 +455,7 @@ class Test_Scripts:
         # use pt.decode("hex") to conver pt ro ASCII
 
         '''Execute'''
-        for each in range(100):
+        for each in range(1000000):
             response = Test_Scripts.uut.read_response()
             print "A2",response
 
@@ -471,6 +471,22 @@ class Test_Scripts:
 
         return True, 'Non zero packets', 'Non zero packets'
 
+    def fields_test(self, field, value):
+        '''Setup'''
+        Test_Scripts.uut.silence_device()
+        data = Test_Scripts.uut.sensor_command("SF", field + value)
+        expected_value = ''.join(hex(val)[2:] for val in value)
+
+        '''Execute'''
+        actual_value = Test_Scripts.uut.sensor_command("GF", field)
+
+        '''Result'''
+        if(int(actual_value[6:], 16) == int(expected_value, 16)):
+            return True, int(actual_value[6:], 16), int(expected_value, 16)
+        else:
+            return False, int(actual_value[6:], 16), int(expected_value, 16)
+
+
 #################################################
 
 class Test_Environment:
@@ -481,7 +497,7 @@ class Test_Environment:
 
     # Add test scetions & test scripts here
     def setup_tests(self):
-        '''
+
         section1 = Test_Section("UART Transaction Verification")
         self.test_sections.append(section1)
         section1.add_test_case(Code("Default Baudrate Test",   self.scripts.default_baudrate_test))
@@ -579,13 +595,17 @@ class Test_Environment:
         section6.add_test_case(Condition_Check("Orientation Functional Test Bad Command10", self.scripts.check_bad_commands, orientation_f ,[0xCC, 0xCC]))
         section6.add_test_case(Condition_Check("Orientation Functional Test Bad Command11", self.scripts.check_bad_commands, orientation_f ,[0xDD, 0xDD]))
         section6.add_test_case(Condition_Check("Orientation Functional Test Bad Command12", self.scripts.check_bad_commands, orientation_f ,[0xEE, 0xEE]))
-        '''
+
         section7 = Test_Section("Bad Field Values")
         self.test_sections.append(section7)
+        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x00]))
+        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x01]))
+        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x04]))
+        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x07]))
         section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x08]))
         section7.add_test_case(Condition_Check("Bad Field Value - Packet Rate",             self.scripts.check_bad_commands, packet_rate_div_f,         [0x00, 0x03]))
         section7.add_test_case(Condition_Check("Bad Field Value - Continuous Packet Type",  self.scripts.check_bad_commands, continuous_packet_type_f,  [0x00, 0x00]))
-        '''
+
         section8 = Test_Section("Write//Set Field Tests")
         self.test_sections.append(section8)
 
@@ -602,15 +622,30 @@ class Test_Environment:
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Gyro Filter Settings",  self.scripts.set_field_retention_test, gyro_filter_setting_f,       [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Accel Filter Settings", self.scripts.set_field_retention_test, accel_filter_setting_f,      [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - User Behavior Switch",  self.scripts.set_field_retention_test, user_behavior_switch_f,      [0x00, 0x32]))
-        '''
-        '''
+
         section9 = Test_Section("Longterm Packet Test")
         self.test_sections.append(section9)
         section9.add_test_case(Code("Longterm packet read test", self.scripts.read_packets_A2))
 
         section10 = Test_Section("User Behavior Field Test")
         self.test_sections.append(section10)
-        '''
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x01]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x02]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x03]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x04]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x05]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x06]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x07]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x08]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x09]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0A]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0B]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0C]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0D]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0E]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0F]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x11]))
+        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x10]))
 
     def run_tests(self):
         for section in self.test_sections:
@@ -629,24 +664,7 @@ class Test_Environment:
         with open(file_name, 'w+') as out_file:
             writer = csv.DictWriter(out_file, fieldnames = fieldnames)
             writer.writeheader()
-    '''
-    def _write_to_csv(self, file_name, info_dicts, fieldnames):
-        #fields=['id', 'test_name', 'expected', 'actual', 'status']
-        with open(file_name, 'a+') as out_file:
-            writer = csv.DictWriter(out_file, fieldnames = fieldnames)
-            #writer.writeheader()
-            #writer.writer.writerow([i.decode('un') for i in fieldnames])
-            writer.writerow(info_dicts)
 
-    def log_results(self, model, serial, version):
-        file_name = 'test_results_' + str(serial) + '_' + str(version) + '.csv'
-        field_names = ['id', 'test_name', 'expected', 'actual', 'status']
-
-        self._create_csv(file_name, field_names)
-        for section in self.test_sections:
-            for test in section.test_cases:
-                self._write_to_csv(file_name, test.result, field_names)
-    '''
     def log_results(self, file_name):
         logger = TestLogger(file_name)
         field_names = ['id', 'test_name', 'expected', 'actual', 'status']
