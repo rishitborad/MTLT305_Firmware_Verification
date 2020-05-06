@@ -20,6 +20,7 @@ lower_limit_accel = -32766 * ((20.0)/65536)
 upper_limit_rate = 32767 * (1260.0/65536)
 lower_limit_rate = -32766 * (1260.0/65536)
 
+
 PK = [0x50, 0x4B]
 CH = [0x43, 0x48]
 GP = [0x47, 0x50]
@@ -43,29 +44,6 @@ accel_filter_setting_f          = [0x00,0x06]
 orientation_f                   = [0x00,0x07]
 user_behavior_switch_f          = [0x00,0x08]
 
-'''
-class Evaluate:
-
-    def __init__(self):
-        self.expetced = None
-        self.actual = None
-
-    def onEvaluate(self, expcted_data, actual_data):
-        raise NotImplementedError("Subclass must implement abstract method")
-
-class Match(Evaluate):
-
-    def onEvaluate(self, expected_data, actual_data):
-        if(expected_data == actual_data):
-            return True
-        else:
-            return False
-
-class Range(Evaluate):
-
-    def onEvaluate(self, )
-
-'''
 # Add test scripts here
 class Test_Scripts:
     uut = None
@@ -620,11 +598,11 @@ class Test_Environment:
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Gyro Filter Settings",  self.scripts.set_field_retention_test, gyro_filter_setting_f,       [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Accel Filter Settings", self.scripts.set_field_retention_test, accel_filter_setting_f,      [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - User Behavior Switch",  self.scripts.set_field_retention_test, user_behavior_switch_f,      [0x00, 0x32]))
-
+        '''
         section9 = Test_Section("Longterm Packet Test")
         self.test_sections.append(section9)
         section9.add_test_case(Code("Longterm packet read test", self.scripts.read_packets_A2))
-
+        '''
         section10 = Test_Section("User Behavior Field Test")
         self.test_sections.append(section10)
         section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x01]))
