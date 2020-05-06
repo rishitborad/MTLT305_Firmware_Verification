@@ -219,9 +219,9 @@ class Test_Scripts:
         field = packet_rate_div_f      # Packet Rate Div Field Address
 
         resp = Test_Scripts.uut.sensor_command("SF", field + rate)
-        print resp
+        #print resp
         if not resp:
-            print "ERORR: Dint receive data"
+            #print "ERORR: Dint receive data"
             return False, resp, 'response'
         #print data
 
@@ -445,11 +445,9 @@ class Test_Scripts:
             return False, int(data[-4:],16), orig_field_val
 
     def read_packets_A2(self):
-        #data = Test_Scripts.uut.sensor_command("SF", continuous_packet_type_f + A2)
-        #print data
-        #time.sleep(1)
         data = Test_Scripts.uut.sensor_command("SF", packet_rate_div_f + [0x00,0x01])
-        print data
+        #print data
+
         # conver list of hex value to string
         pt = ''.join(hex(val)[2:] for val in A2)
         # use pt.decode("hex") to conver pt ro ASCII
@@ -457,14 +455,14 @@ class Test_Scripts:
         '''Execute'''
         for each in range(1000000):
             response = Test_Scripts.uut.read_response()
-            print "A2",response
+            #print "A2",response
 
             if not response:
                 return False, 'No response', 'Non zero packets'
 
             if response[0] == pt.decode("hex"):
                 if(int(response[2],16) == 0):
-                    print response[2]
+                    #print response[2]
                     return False, response[2], 'Non zero packets'
             else:
                 return False, response[2], 'Non zero packets'
