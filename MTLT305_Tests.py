@@ -450,12 +450,13 @@ class Test_Scripts:
     def fields_test(self, field, value):
         '''Setup'''
         Test_Scripts.uut.silence_device()
+
         data = Test_Scripts.uut.sensor_command("SF", field + value)
         expected_value = ''.join(hex(val)[2:] for val in value)
 
         '''Execute'''
         actual_value = Test_Scripts.uut.sensor_command("GF", field)
-
+        
         '''Result'''
         if(int(actual_value[6:], 16) == int(expected_value, 16)):
             return True, int(actual_value[6:], 16), int(expected_value, 16)
@@ -517,7 +518,6 @@ class Test_Environment:
         section4 = Test_Section("Packet Rate Divider Functional Test")
         self.test_sections.append(section4)
         section4.add_test_case(Condition_Check("Packet Rate Div 100Hz",  self.scripts.packet_rate_div, [0x00,0x01], 100))
-
         section4.add_test_case(Condition_Check("Packet Rate Div 50Hz",   self.scripts.packet_rate_div, [0x00,0x02], 50))
         section4.add_test_case(Condition_Check("Packet Rate Div 25Hz",   self.scripts.packet_rate_div, [0x00,0x04], 25))
         section4.add_test_case(Condition_Check("Packet Rate Div 20Hz",   self.scripts.packet_rate_div, [0x00,0x05], 20))
@@ -598,30 +598,19 @@ class Test_Environment:
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Gyro Filter Settings",  self.scripts.set_field_retention_test, gyro_filter_setting_f,       [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - Accel Filter Settings", self.scripts.set_field_retention_test, accel_filter_setting_f,      [0x00, 0x32]))
         section8.add_test_case(Condition_Check("Set Field Data Retention Test - User Behavior Switch",  self.scripts.set_field_retention_test, user_behavior_switch_f,      [0x00, 0x32]))
-        '''
-        section9 = Test_Section("Longterm Packet Test")
+
+        section9 = Test_Section("User Behavior Field Test")
         self.test_sections.append(section9)
-        section9.add_test_case(Code("Longterm packet read test", self.scripts.read_packets_A2))
-        '''
-        section10 = Test_Section("User Behavior Field Test")
+        #Below test case deemed not important by Jamie for this verification efforts, commented out.
+        #section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x01]))
+        section9.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x10]))
+        section9.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x80]))
+        section9.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x40]))
+
+        section10 = Test_Section("Longterm Packet Test")
         self.test_sections.append(section10)
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x01]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x02]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x03]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x04]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x05]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x06]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x07]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x08]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x09]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0A]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0B]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0C]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0D]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0E]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x0F]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x11]))
-        section10.add_test_case(Condition_Check("User Behavior Field Test - Free Integrate", self.scripts.fields_test, user_behavior_switch_f, [0x00, 0x10]))
+        section10.add_test_case(Code("Longterm packet read test", self.scripts.read_packets_A2))
+
 
     def run_tests(self):
         for section in self.test_sections:
