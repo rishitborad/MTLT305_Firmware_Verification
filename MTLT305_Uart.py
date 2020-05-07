@@ -150,12 +150,12 @@ class UART_Dev:
 
         if response:
             if(response[0] == message_type):
-                print response[0], response[2]
+                #print response[0], response[2]
                 return response[2]          # just payload
             elif("GP" == message_type):
                 return response             # packet_type + payload_len + payload
             else:
-                print "resp", response
+                #print "resp", response
                 return response
         else:
             print "Error: No response Received in sensor_commnd"
