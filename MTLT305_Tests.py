@@ -456,7 +456,7 @@ class Test_Scripts:
 
         '''Execute'''
         actual_value = Test_Scripts.uut.sensor_command("GF", field)
-        
+
         '''Result'''
         if(int(actual_value[6:], 16) == int(expected_value, 16)):
             return True, int(actual_value[6:], 16), int(expected_value, 16)
@@ -574,11 +574,6 @@ class Test_Environment:
 
         section7 = Test_Section("Bad Field Values")
         self.test_sections.append(section7)
-        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x00]))
-        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x01]))
-        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x04]))
-        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x07]))
-        section7.add_test_case(Condition_Check("Bad Field Value - Baudrate",                self.scripts.check_bad_commands, unit_baud_f,               [0x00, 0x08]))
         section7.add_test_case(Condition_Check("Bad Field Value - Packet Rate",             self.scripts.check_bad_commands, packet_rate_div_f,         [0x00, 0x03]))
         section7.add_test_case(Condition_Check("Bad Field Value - Continuous Packet Type",  self.scripts.check_bad_commands, continuous_packet_type_f,  [0x00, 0x00]))
 
